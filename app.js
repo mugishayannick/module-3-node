@@ -5,7 +5,7 @@ const swaggerJsDoc = require('swagger-jsdoc')
 const messageRoutes = require('./routes/message');
 const articleRoutes = require('./routes/article');
 const { serve } = require("swagger-ui-express");
-const authArticle = require('./routes/authArticle');
+const auth = require('./routes/auth');
 const cookieParser = require('cookie-parser');
 
 
@@ -47,7 +47,7 @@ app.use(cookieParser());
 
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs))
-app.use('/api/authArticle', authArticle);
+app.use('/api/auth', auth);
 
 //cookies
 app.get('/api/set-cookies', (req, res) => {

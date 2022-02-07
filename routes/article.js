@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const articleCtrl = require("../controllers/article");
+const authMiddleware = require("../middleware/auth/index");
 
 /**
  * @swagger
@@ -62,7 +63,9 @@ const articleCtrl = require("../controllers/article");
  *                        $ref: '#/components/schemas/article'
  *                     
  */
-router.get('/',articleCtrl.getAllArticles);
+router.get('/', articleCtrl.getAllArticles);
+
+router.use(authMiddleware.protect);
 
 /**
  * @swagger

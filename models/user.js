@@ -31,14 +31,30 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-
-//fire a function before doc saved to db
-userSchema.pre('save', async function (next) {
-    const salt = await bcrypt.genSalt();
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-
-})
+try {
+    userSchema.pre("save", async function(next) {
+      try {
+        if (!this.isModified("password")) return next();
+        this.password = await bcrypt.hash(this.password, 12);
+        next();
+      } catch (err) {
+        console.log("some problems occured while creating account", err);
+      }
+    });
+  
+    userSchema.methods.correctPassword = async function(
+      incomingPassword,
+      userPassword
+    ) {
+      try {
+        return await bcrypt.compare(incomingPassword, userPassword);
+      } catch (err) {
+        console.log("some problems occured while comparing passwords", err);
+      }
+    };
+  } catch (err) {
+    console.log("some problems occured while creating account", err);
+  }
 
 const user = mongoose.model('user', userSchema);
 
